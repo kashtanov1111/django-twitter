@@ -1,0 +1,150 @@
+{% extends '_base.html' %}
+{% load static %}
+{% load define_action %}
+
+{% block content %}
+    <ul class=" nav justify-content-center nav-tabs">
+        <li class="nav-item">
+          <a class="nav-link active"  href="{% url 'tweets:following' tweets_user.username %}">Following</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'tweets:followers' tweets_user.username %}">Followers</a>
+        </li>
+    </ul>
+    {% if follow_list %}
+        {% for follower in follow_list %}
+            {% if tweets.user == user %}
+                {% if follower.person != user %}
+                <div class="card">
+                    <div class="card-body">
+                        <div class='row'>
+                            <div class='col-1'>
+                                {% if follower.person.avatar %}
+                                    <a href="{% url 'tweets:user' follower.person.username %}"><img class='base-user-avatar' src="{{ follower.person.avatar.url }}" alt=""></a>
+                                {% else %}
+                                    <a href="{% url 'tweets:user' follower.person.username %}"><img class='base-user-avatar' src="{% static 'images/nobody.jpg' %}" alt=""></a>
+                                {% endif %}
+                            </div>
+                            <div class='col-11'>
+                                <div class='row'>
+                                    <div class='col-9'>
+                                        <a class='special-link-follow special-link' href="{% url 'tweets:user' follower.person.username %}"><p class='name-user'><strong>{{ follower.person.name }}</strong></p>
+                                        <p style='margin-top:-20px;'>@{{ follower.person.username }}</p></a>
+                                    </div>
+                                    <div class='col-3'>
+                                        <strong><a href="{% url 'tweets:following_unfollow' username1=tweets_user.username username2=follower.person.username %}" class='  edit-profile-btn special-link '>Unfollow</a></strong>
+                                    </div>
+                                </div>
+                                <div class='row'>
+                                    <div class='col-12'>
+                                        <p style='margin-top:-10px;'>{{ follower.person.bio }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                  </div>
+                {% endif %}
+            {% else %}
+                {% if follower.person != user %}
+                    {% update_variable False as flag %}
+                    {% for following in user.following.all %}
+                            {% if following.person == follower.person %}
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class='row'>
+                                            <div class='col-1'>
+                                                {% if follower.person.avatar %}
+                                                    <a href="{% url 'tweets:user' follower.person.username %}"><img class='base-user-avatar' src="{{ follower.person.avatar.url }}" alt=""></a>
+                                                {% else %}
+                                                    <a href="{% url 'tweets:user' follower.person.username %}"><img class='base-user-avatar' src="{% static 'images/nobody.jpg' %}" alt=""></a>
+                                                {% endif %}
+                                            </div>
+                                            <div class='col-11'>
+                                                <div class='row'>
+                                                    <div class='col-9'>
+                                                        <a class='special-link-follow special-link' href="{% url 'tweets:user' follower.person.username %}"><p class='name-user'><strong>{{ follower.person.name }}</strong></p>
+                                                        <p style='margin-top:-20px;'>@{{ follower.person.username }}</p></a>
+                                                    </div>
+                                                    <div class='col-3'>
+                                                        <strong><a href="{% url 'tweets:following_unfollow' username1=tweets_user.username username2=follower.person.username %}" class='  edit-profile-btn special-link '>Unfollow</a></strong>
+                                                    </div>
+                                                </div>
+                                                <div class='row'>
+                                                    <div class='col-12'>
+                                                        <p style='margin-top:-10px;'>{{ follower.person.bio }}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% update_variable True as flag %}
+                            {% endif %}
+                            {% if forloop.counter == user.following.count and flag == False %}
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class='row'>
+                                            <div class='col-1'>
+                                                {% if follower.person.avatar %}
+                                                    <a href="{% url 'tweets:user' follower.person.username %}"><img class='base-user-avatar' src="{{ follower.person.avatar.url }}" alt=""></a>
+                                                {% else %}
+                                                    <a href="{% url 'tweets:user' follower.person.username %}"><img class='base-user-avatar' src="{% static 'images/nobody.jpg' %}" alt=""></a>
+                                                {% endif %}
+                                            </div>
+                                            <div class='col-11'>
+                                                <div class='row'>
+                                                    <div class='col-9'>
+                                                        <a class='special-link-follow special-link' href="{% url 'tweets:user' follower.person.username %}"><p class='name-user'><strong>{{ follower.person.name }}</strong></p>
+                                                        <p style='margin-top:-20px;'>@{{ follower.person.username }}</p></a>
+                                                    </div>
+                                                    <div class='col-3'>
+                                                        <strong><a href="{% url 'tweets:following_unfollow' username1=tweets_user.username username2=follower.person.username %}" class='  edit-profile-btn special-link '>follow</a></strong>
+                                                    </div>
+                                                </div>
+                                                <div class='row'>
+                                                    <div class='col-12'>
+                                                        <p style='margin-top:-10px;'>{{ follower.person.bio }}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endif %}
+                    {% endfor %}
+                {% else %}
+                    <div class="card">
+                        <div class="card-body">
+                            <div class='row'>
+                                <div class='col-1'>
+                                    {% if follower.person.avatar %}
+                                        <a href="{% url 'tweets:user' follower.person.username %}"><img class='base-user-avatar' src="{{ follower.person.avatar.url }}" alt=""></a>
+                                    {% else %}
+                                        <a href="{% url 'tweets:user' follower.person.username %}"><img class='base-user-avatar' src="{% static 'images/nobody.jpg' %}" alt=""></a>
+                                    {% endif %}
+                                </div>
+                                <div class='col-11'>
+                                    <div class='row'>
+                                        <div class='col-12'>
+                                            <a class='special-link-follow special-link' href="{% url 'tweets:user' follower.person.username %}"><p class='name-user'><strong>{{ follower.person.name }}</strong></p>
+                                            <p style='margin-top:-20px;'>@{{ follower.person.username }}</p></a>
+                                        </div>
+                                    </div>
+                                    <div class='row'>
+                                        <div class='col-12'>
+                                            <p style='margin-top:-10px;'>{{ follower.person.bio }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+            {% endif %}
+        {% endfor %}
+    {% else %}
+        <h1 class='center'>You haven't followed anybody yet.</h1>
+        <p class='center'>When you follow somebody, you'll see him here.</p>
+    {% endif %}
+{% endblock content %}

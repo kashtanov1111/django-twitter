@@ -1,0 +1,25 @@
+{% load static %}
+<div class="card">
+    <div class="card-body">
+        
+        <div class='row'>
+            <div class='col-1'>
+                {% if tweet.author.avatar %}
+                    <a href="{% url 'tweets:user' tweet.author.username %}"><img class='base-user-avatar' src="{{ tweet.author.avatar.url }}" alt=""></a>
+                {% else %}
+                    <a href="{% url 'tweets:user' tweet.author.username %}"><img class='base-user-avatar' src="{% static 'images/nobody.jpg' %}" alt=""></a>
+                {% endif %}
+            </div>
+            <div class='col-11'>
+                <p><a class='special-link' href="{% url 'tweets:user' tweet.author.username %}"><strong>{{ tweet.author.name }}</strong> <span class='username-in-tweet'>@{{ tweet.author.username }}</span> &#183;</a> {{ tweet.since_published }}</p>
+                <p class='text-in-tweet'>{{ tweet.text }}</p>
+                {% if tweet.image %}
+                    <img src="{{ tweet.image.url }}" class='tweet-image' alt="">
+                {% endif %}
+            </div>
+        </div>
+    </div>
+  </div>
+
+
+

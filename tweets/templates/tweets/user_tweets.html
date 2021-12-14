@@ -1,0 +1,81 @@
+{% extends '_base.html' %}
+{% load static %}
+
+{% block content %}
+    <div class='user-top'>
+        <div class='row1 row'>
+            <div class='col-1'>
+                <a href="{% url 'tweets:home' %}"><span class=' bi bi-arrow-left'></span></a>
+            </div>
+            <div class='col-11'>
+                <h5><a class='special-link' href="{% url 'tweets:home' %}"><strong>{{ tweets_user.name }}</strong></a></h5>
+            </div>
+        </div>
+        <div class=' row'>
+            <div class='col-1'></div>
+            <div class='col-11'>
+                <p class='small-size'>{{ tweets_user.tweets.count }} Tweet{{ tweets_user.tweets.count|pluralize }}</p>
+            </div>
+        </div>
+    </div>
+    {% if tweets_user.background %}
+    <img class='background-user' src="{{ tweets_user.background.url }}" alt="">
+    {% else %}
+    <img class='background-user' src="{% static 'images/back.jpg' %}" alt="">
+    {% endif %}
+    {% if tweets_user.avatar %}
+    <img  class='avatar-user' src="{{ tweets_user.avatar.url }}" alt="">
+    {% else %}
+    <img  class='avatar-user' src="{% static 'images/nobody.jpg' %}" alt="">
+    {% endif %}
+    {% if tweets_user == user %}
+        <div class=' row'>
+            <div class='col-9'></div>
+            <div class='edit-profile col-3'>
+                <strong><a href="{% url 'tweets:edit' %}" class='edit-profile-btn special-link '>Edit profile</a></strong>
+            </div>
+        </div>
+    {% endif %}
+    {% if check and tweets_user != user %}
+    <div class=' row'>
+        <div class='col-9'></div>
+        <div class='edit-profile col-3'>
+            <strong><a href="{% url 'tweets:follow' tweets_user.username %}" class='  edit-profile-btn special-link '>Unfollow</a></strong>
+        </div>
+    </div>
+    {% endif %}
+    {% if check == False and tweets_user != user %}
+    <div class=' row'>
+        <div class='col-9'></div>
+        <div class='edit-profile col-3'>
+            <strong><a href="{% url 'tweets:follow' tweets_user.username %}" class='edit-profile-btn special-link '>Follow</a></strong>
+        </div>
+    </div>
+    {% endif %}
+    
+    <h5><strong>{{ tweets_user.name }}</strong></h5>
+    <p class='username'>@{{ tweets_user.username }}</p>
+    <p>{{ tweets_user.bio }}</p>
+    <div style='color:rgb(94, 94, 94)' class='row'>
+        <div class='col-2'>
+            <p><span  class='bi bi-geo-alt'></span> {{ tweets_user.location }}</p>
+        </div>
+        <div class='col-2'>
+            <a class='site-user' href="{{ tweets_user.site }}"><p><span style='color:rgb(94, 94, 94)' class='bi bi-link-45deg'></span> Link</p></a>
+        </div>
+        <div class='col-4'>
+            <p><span class='bi bi-calendar-date'></span> Joined {{ tweets_user.joined }}</p>
+        </div>
+    </div>
+    <div class='row'>
+        <div class='col-2'>
+            <a class='follow-user' href="{% url 'tweets:following' tweets_user.username %}"><p><strong style='color:black;'>{{ tweets_user.following.count }}</strong> Following</p></a>
+        </div>
+        <div class='col-2'>
+            <a class='follow-user' href="{% url 'tweets:followers' tweets_user.username %}"><p><strong style='color:black;'>{{ tweets_user.followers.count }}</strong> Followers</p></a>
+        </div>
+    </div>
+    {% for tweet in tweet_list %}
+        {% include 'tweets/_tweet.html' %}
+    {% endfor %}
+{% endblock content %}

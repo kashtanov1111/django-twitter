@@ -1,0 +1,23 @@
+{% extends '_base.html' %}
+
+{% block content %}
+    <div class='row'>
+        {% for tweet in tweet_list %}
+            {% if tweet.author == user %}
+                    {% include 'tweets/_tweet.html' %}
+            {% else %}
+                        
+
+
+                        {% for following in user.following.all %}
+
+                            {% if tweet.author == following.person %}
+                                {% include 'tweets/_tweet.html' %}
+                            {% endif %}
+                        {% endfor %}
+
+
+            {% endif %}      
+        {% endfor %}
+    </div>
+{% endblock content %}

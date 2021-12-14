@@ -6,6 +6,11 @@ name = "pypi"
 [packages]
 django = "==4.0.0"
 psycopg2-binary = "==2.9.2"
+django-crispy-forms = "==1.13.0"
+django-allauth = "==0.47.0"
+environs = {version = "==8.0.0", extras = ["django"]}
+pillow = "==8.4.0"
+django-debug-toolbar = "==3.2.2"
 
 [dev-packages]
 
