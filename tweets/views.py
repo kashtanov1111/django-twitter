@@ -1,17 +1,19 @@
 from typing import List
 from django.shortcuts import render
-from django.views.generic import TemplateView, ListView, CreateView, RedirectView
+from django.views.generic import TemplateView, DetailView, ListView, CreateView, RedirectView
 from django.contrib.auth import get_user_model
 from django.http import Http404
 from django.shortcuts import render, HttpResponse, HttpResponseRedirect
 from django.urls import reverse
 from django.db import IntegrityError
+from django.utils import timezone
+from datetime import datetime
 
 
 from accounts.forms import CustomUserChangeForm
 from .models import Tweet
 from accounts.models import Follow
-
+from .forms import TweetCreateForm
 
 
 
@@ -19,6 +21,8 @@ from accounts.models import Follow
 class HomeListView(ListView):
     model = Tweet
 
+    def get_queryset(self):
+        return Tweet.objects.filter(published__lte=timezone.now()).all()
 
 
 class UserListView(ListView):
@@ -31,7 +35,7 @@ class UserListView(ListView):
         except get_user_model().DoesNotExist:
             raise Http404
         else:
-            return self.tweets_user.tweets.all()
+            return self.tweets_user.tweets.filter(published__lte=timezone.now()).all()
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -83,12 +87,13 @@ def userprofile(request):
             return HttpResponseRedirect(reverse('tweets:user', args=[request.user.username]))
     else:
         profile_form = CustomUserChangeForm(instance=request.user)
-    return render(request, 'account/edit_profile.html', {'profile_form': profile_form})
+        time = datetime.now()
+    return render(request, 'account/edit_profile.html', {'profile_form': profile_form, 'time': time})
 
 
 class CreateTweetView(CreateView):
     model = Tweet
-    fields = ('text', 'image', 'published')
+    form_class = TweetCreateForm
 
     def form_valid(self, form):
         self.object = form.save(commit=False)
@@ -121,3 +126,19 @@ class FollowingUser(RedirectView):
         except:
             Follow.objects.create(person=bloger, follower_of_person=self.request.user)
         return super().get(request, *args, **kwargs)
+
+class FollowerUser(RedirectView):
+    
+    def get_redirect_url(self, *args, **kwargs):
+        return reverse('tweets:followers', kwargs={'username': self.kwargs.get('username1')})
+
+    def get(self, request, *args, **kwargs):
+        bloger = get_user_model().objects.get(username=self.kwargs.get('username2'))
+        try:
+            Follow.objects.get(person=bloger, follower_of_person=self.request.user).delete()
+        except:
+            Follow.objects.create(person=bloger, follower_of_person=self.request.user)
+        return super().get(request, *args, **kwargs)
+
+class TweetDetailView(DetailView):
+    model = Tweet

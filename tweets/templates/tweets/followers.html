@@ -1,5 +1,6 @@
 {% extends '_base.html' %}
 {% load static %}
+{% load define_action %}
 
 {% block content %}
 <ul class="nav justify-content-center nav-tabs">
@@ -13,36 +14,47 @@
     {% if follow_list %}
     {% for follower in follow_list %}
         {% if tweets_user == user %}
-          <div class="card">
-            <div class="card-body">
-                <div class='row'>
-                    <div class='col-1'>
-                        {% if follower.follower_of_person.avatar %}
-                            <a href="{% url 'tweets:user' follower.follower_of_person.username %}"><img class='base-user-avatar' src="{{ follower.follower_of_person.avatar.url }}" alt=""></a>
-                        {% else %}
-                            <a href="{% url 'tweets:user' follower.follower_of_person.username %}"><img class='base-user-avatar' src="{% static 'images/nobody.jpg' %}" alt=""></a>
-                        {% endif %}
-                    </div>
-                    <div class='col-11'>
-                        <div class='row'>
-                            <div class='col-12'>
-                                <a class='special-link-follow special-link' href="{% url 'tweets:user' follower.follower_of_person.username %}"><p class='name-user'><strong>{{ follower.follower_of_person.name }}</strong></p>
-                                <p style='margin-top:-20px;'>@{{ follower.follower_of_person.username }}</p></a>
-                            </div>
-                        </div>
-                        <div class='row'>
-                            <div class='col-12'>
-                                <p style='margin-top:-10px;'>{{ follower.follower_of_person.bio }}</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+          {% include 'tweets/_followers.html' %}
+        {% else %}
+          {% if follower.follower_of_person == user %}
+            <div class="card">
+              <div class="card-body">
+                  <div class='row'>
+                      <div class='col-1'>
+                          {% if follower.follower_of_person.avatar %}
+                              <a href="{% url 'tweets:user' follower.follower_of_person.username %}"><img class='base-user-avatar' src="{{ follower.follower_of_person.avatar.url }}" alt=""></a>
+                          {% else %}
+                              <a href="{% url 'tweets:user' follower.follower_of_person.username %}"><img class='base-user-avatar' src="{% static 'images/nobody.jpg' %}" alt=""></a>
+                          {% endif %}
+                      </div>
+                      <div class='col-11'>
+                          <div class='row'>
+                              <div class='col-12'>
+                                  <a class='special-link-follow special-link' href="{% url 'tweets:user' follower.follower_of_person.username %}"><p class='name-user'><strong>{{ follower.follower_of_person.name }}</strong></p>
+                                  <p style='margin-top:-20px;'>@{{ follower.follower_of_person.username }}</p></a>
+                              </div>
+                          </div>
+                          <div class='row'>
+                              <div class='col-12'>
+                                  <p style='margin-top:-10px;'>{{ follower.follower_of_person.bio }}</p>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+              </div>
             </div>
-          </div>
+          {% else %}
+            {% include 'tweets/_followers.html' %}
+          {% endif %}
         {% endif %}
     {% endfor %}
     {% else %}
-        <h1 class='center'>You don't have any followers yet</h1>
-        <p class='center'>When someone follows you, you'll see them here.</p>
+        {% if tweets_user == user %}
+          <h1 class='center'>You don't have any followers yet</h1>
+          <p class='center'>When someone follows you, you'll see them here.</p>
+        {% else %}
+          <h1 class='center'>@{{ tweets_user.username }} doesn't have any followers yet</h1>
+          <p class='center'>When someone follows him, you'll see it here.</p>
+        {% endif %}
     {% endif %}
 {% endblock content %}

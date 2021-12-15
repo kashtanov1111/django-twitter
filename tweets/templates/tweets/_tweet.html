@@ -1,7 +1,7 @@
 {% load static %}
+{{ tweet.published }}
 <div class="card">
-    <div class="card-body">
-        
+    <div class="card-body">  
         <div class='row'>
             <div class='col-1'>
                 {% if tweet.author.avatar %}
@@ -11,15 +11,42 @@
                 {% endif %}
             </div>
             <div class='col-11'>
-                <p><a class='special-link' href="{% url 'tweets:user' tweet.author.username %}"><strong>{{ tweet.author.name }}</strong> <span class='username-in-tweet'>@{{ tweet.author.username }}</span> &#183;</a> {{ tweet.since_published }}</p>
+                <p><a class='special-link' href="{% url 'tweets:user' tweet.author.username %}"><strong>{{ tweet.author.name }}</strong> <span class='username-in-tweet'>@{{ tweet.author.username }}</span> &#183;</a><a class='special-link' href="{% url 'tweets:detail' pk=tweet.pk %}">   {{ tweet.since_published }}</p>
                 <p class='text-in-tweet'>{{ tweet.text }}</p>
                 {% if tweet.image %}
                     <img src="{{ tweet.image.url }}" class='tweet-image' alt="">
                 {% endif %}
+                </a>
+                <div class='row'>
+                    <div class='col-3'>
+                        <a href=""><span class='bi bi-chat'></span></a>
+                    </div>
+                    <div class='col-3'>
+                        <div class="dropdown">
+                            <a class="" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                                <span class='bi bi-arrow-repeat'></span>
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                              <li><a class="dropdown-item" href="#"><i class="bi bi-arrow-repeat"></i> Retweet</a></li>
+                              <li><a class="dropdown-item" href="#"><i class="bi bi-pencil"></i> Quote Tweet</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class='col-3'>
+                        <a href=""><span class='bi bi-heart'></span></a>
+                    </div>
+                    <div class='col-3'>
+                        <div class="dropdown">
+                            <a class="" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                                <span class='bi bi-box-arrow-up'></span>
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                              <li><a class="dropdown-item" href="#"><i class="bi bi-envelope"></i> Send via Direct Message</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
   </div>
-
-
-

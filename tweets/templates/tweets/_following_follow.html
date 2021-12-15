@@ -1,0 +1,31 @@
+{% load static %}
+{% load define_action %}
+<div class="card">
+    <div class="card-body">
+        <div class='row'>
+            <div class='col-1'>
+                {% if follower.person.avatar %}
+                    <a href="{% url 'tweets:user' follower.person.username %}"><img class='base-user-avatar' src="{{ follower.person.avatar.url }}" alt=""></a>
+                {% else %}
+                    <a href="{% url 'tweets:user' follower.person.username %}"><img class='base-user-avatar' src="{% static 'images/nobody.jpg' %}" alt=""></a>
+                {% endif %}
+            </div>
+            <div class='col-11'>
+                <div class='row'>
+                    <div class='col-8'>
+                        <a class='special-link-follow special-link' href="{% url 'tweets:user' follower.person.username %}"><p class='name-user'><strong>{{ follower.person.name }}</strong></p>
+                        <p style='margin-top:-20px;'>@{{ follower.person.username }}</p></a>
+                    </div>
+                    <div class='col-4'>
+                        <strong><a href="{% url 'tweets:following_unfollow' username1=tweets_user.username username2=follower.person.username %}" class='edit-profile edit-profile-btn special-link '>Follow</a></strong>
+                    </div>
+                </div>
+                <div class='row'>
+                    <div class='col-12'>
+                        <p style='margin-top:-10px;'>{{ follower.person.bio }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -29,26 +29,26 @@
     <img  class='avatar-user' src="{% static 'images/nobody.jpg' %}" alt="">
     {% endif %}
     {% if tweets_user == user %}
-        <div class=' row'>
+        <div class='row-margin-top row'>
             <div class='col-9'></div>
-            <div class='edit-profile col-3'>
-                <strong><a href="{% url 'tweets:edit' %}" class='edit-profile-btn special-link '>Edit profile</a></strong>
+            <div class='col-3'>
+                <strong><a href="{% url 'tweets:edit' %}" class='edit-profile edit-profile-btn special-link '>Edit profile</a></strong>
             </div>
         </div>
     {% endif %}
     {% if check and tweets_user != user %}
-    <div class=' row'>
+    <div class='row-margin-top row'>
         <div class='col-9'></div>
-        <div class='edit-profile col-3'>
-            <strong><a href="{% url 'tweets:follow' tweets_user.username %}" class='  edit-profile-btn special-link '>Unfollow</a></strong>
+        <div class=' col-3'>
+            <strong><a href="{% url 'tweets:follow' tweets_user.username %}" class='edit-profile  edit-profile-btn special-link '>Unfollow</a></strong>
         </div>
     </div>
     {% endif %}
     {% if check == False and tweets_user != user %}
-    <div class=' row'>
+    <div class='row-margin-top row'>
         <div class='col-9'></div>
-        <div class='edit-profile col-3'>
-            <strong><a href="{% url 'tweets:follow' tweets_user.username %}" class='edit-profile-btn special-link '>Follow</a></strong>
+        <div class=' col-3'>
+            <strong><a href="{% url 'tweets:follow' tweets_user.username %}" class='edit-profile edit-profile-btn special-link '>Follow</a></strong>
         </div>
     </div>
     {% endif %}
