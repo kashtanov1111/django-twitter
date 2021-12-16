@@ -1,11 +1,17 @@
 {% extends '_base.html' %}
 {% load crispy_forms_tags %}
+{% load tz_detect %}
+{% load tz %}
 
 {% block content %}
     <h1>New tweet</h1>
+    {% tz_detect %}
     <form enctype="multipart/form-data" method='post'>
+        
+    
         {% csrf_token %}
         {{ form|crispy }}
         <input class='btn-margin-up btn btn-success' type="submit" value='Tweet'>
     </form>
+    
 {% endblock content %}

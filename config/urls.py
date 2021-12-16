@@ -22,6 +22,7 @@ urlpatterns = [
     path('admin-2281953/', admin.site.urls),
     path('accounts/', include('allauth.urls')),
     path('', include('tweets.urls')),
+    path('tz_detect/', include('tz_detect.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) 
 
 

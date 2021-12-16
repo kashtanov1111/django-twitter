@@ -7,7 +7,8 @@ from django.shortcuts import render, HttpResponse, HttpResponseRedirect
 from django.urls import reverse
 from django.db import IntegrityError
 from django.utils import timezone
-from datetime import datetime
+from datetime import datetime, timedelta
+from django.conf import settings
 
 
 from accounts.forms import CustomUserChangeForm
@@ -100,6 +101,12 @@ class CreateTweetView(CreateView):
         self.object.author = self.request.user
         self.object.save()
         return super().form_valid(form)
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        self.time = timezone.now()
+        context['time'] = self.time
+        return context
 
 class FollowUser(RedirectView):
     

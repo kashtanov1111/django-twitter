@@ -3,6 +3,7 @@ from .models import Tweet
 from django.utils import timezone
 from datetime import datetime, timedelta
 
+
 class TweetCreateForm(forms.ModelForm):
     #published = forms.DateTimeField(
     #    input_formats = ['%Y-%m-%dT%H:%M'],
@@ -23,5 +24,5 @@ class TweetCreateForm(forms.ModelForm):
         fields = ('text', 'image', 'published')
         widgets = {
             #'published':forms.DateInput(attrs={'type':'date', 'value': datetime.now().strftime("%d-%m-%Y")}),
-            'published':forms.DateTimeInput(attrs={'type':'datetime-local', 'value': datetime.now().strftime("%Y-%m-%dT%H:%M")}, format='%Y-%m-%dT%H:%M'),
+            'published':forms.DateTimeInput(attrs={'type':'datetime-local'}, format='%Y-%m-%dT%H:%M'),
         }

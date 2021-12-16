@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
 from pathlib import Path
+
+from django.conf import settings
 from environs import Env # new
 env = Env() # new
 env.read_env() # new
@@ -49,11 +51,13 @@ INSTALLED_APPS = [
     'allauth.account',
     'debug_toolbar',
     'storages',
+    'tz_detect',
 
     #local
     'accounts',
     'tweets',
 ]
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -65,6 +69,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
+    'tz_detect.middleware.TimezoneMiddleware',
 ]
 
 ROOT_URLCONF = 'config.urls'
@@ -121,7 +126,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'Asia/Yekaterinburg'
+TIME_ZONE = 'UTC'
 
 USE_I18N = True
 

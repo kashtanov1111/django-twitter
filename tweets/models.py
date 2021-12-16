@@ -16,7 +16,7 @@ class Tweet(models.Model):
     retweeted_by = models.ManyToManyField(get_user_model(), blank=True, related_name='tweets_retweeted')
     quote_tweeted_by = models.ManyToManyField(get_user_model(), blank=True, related_name='tweets_quote_retweeted')
     image = models.ImageField(upload_to='tweet_photos/%Y/%m/%d/', blank=True)
-    published = models.DateTimeField(default=datetime.now, blank=True)
+    published = models.DateTimeField(default=timezone.now, blank=True)
 
     def __str__(self):
         return self.text[:25]
