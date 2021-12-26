@@ -1,6 +1,7 @@
 from typing import List
 from django.shortcuts import render
-from django.views.generic import TemplateView, DetailView, ListView, CreateView, RedirectView
+from django.urls.base import reverse_lazy
+from django.views.generic import DeleteView, TemplateView, DetailView, ListView, CreateView, RedirectView
 from django.contrib.auth import get_user_model
 from django.http import Http404
 from django.shortcuts import render, HttpResponse, HttpResponseRedirect
@@ -9,7 +10,8 @@ from django.db import IntegrityError
 from django.utils import timezone
 from datetime import datetime, timedelta
 from django.conf import settings
-
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.contrib.auth.decorators import login_required
 
 from accounts.forms import CustomUserChangeForm
 from .models import Tweet
@@ -19,14 +21,14 @@ from .forms import TweetCreateForm
 
 
 
-class HomeListView(ListView):
+class HomeListView(LoginRequiredMixin, ListView):
     model = Tweet
 
     def get_queryset(self):
         return Tweet.objects.filter(published__lte=timezone.now()).all()
 
 
-class UserListView(ListView):
+class UserListView(LoginRequiredMixin, ListView):
     model = Tweet
     template_name = 'tweets/user_tweets.html'
 
@@ -45,7 +47,7 @@ class UserListView(ListView):
         context['check'] = self.check
         return context
 
-class Followers(ListView):
+class Followers(LoginRequiredMixin, ListView):
     model = Follow
     template_name = 'tweets/followers.html'
 
@@ -62,7 +64,7 @@ class Followers(ListView):
         context['tweets_user'] = self.tweets_user
         return context
 
-class Following(ListView):
+class Following(LoginRequiredMixin, ListView):
     model = Follow
     template_name = 'tweets/following.html'
 
@@ -79,7 +81,7 @@ class Following(ListView):
         context['tweets_user'] = self.tweets_user
         return context
 
-
+@login_required
 def userprofile(request):
     if request.method == 'POST':
         profile_form = CustomUserChangeForm(request.POST, request.FILES, instance=request.user)
@@ -92,7 +94,7 @@ def userprofile(request):
     return render(request, 'account/edit_profile.html', {'profile_form': profile_form, 'time': time})
 
 
-class CreateTweetView(CreateView):
+class CreateTweetView(LoginRequiredMixin, CreateView):
     model = Tweet
     form_class = TweetCreateForm
 
@@ -108,7 +110,7 @@ class CreateTweetView(CreateView):
         context['time'] = self.time
         return context
 
-class FollowUser(RedirectView):
+class FollowUser(LoginRequiredMixin, RedirectView):
     
     def get_redirect_url(self, *args, **kwargs):
         return reverse('tweets:user', kwargs={'username': self.kwargs.get('username')})
@@ -121,7 +123,7 @@ class FollowUser(RedirectView):
             Follow.objects.get(person=bloger, follower_of_person=self.request.user).delete()
         return super().get(request, *args, **kwargs)
 
-class FollowingUser(RedirectView):
+class FollowingUser(LoginRequiredMixin, RedirectView):
     
     def get_redirect_url(self, *args, **kwargs):
         return reverse('tweets:following', kwargs={'username': self.kwargs.get('username1')})
@@ -134,7 +136,7 @@ class FollowingUser(RedirectView):
             Follow.objects.create(person=bloger, follower_of_person=self.request.user)
         return super().get(request, *args, **kwargs)
 
-class FollowerUser(RedirectView):
+class FollowerUser(LoginRequiredMixin, RedirectView):
     
     def get_redirect_url(self, *args, **kwargs):
         return reverse('tweets:followers', kwargs={'username': self.kwargs.get('username1')})
@@ -147,5 +149,53 @@ class FollowerUser(RedirectView):
             Follow.objects.create(person=bloger, follower_of_person=self.request.user)
         return super().get(request, *args, **kwargs)
 
-class TweetDetailView(DetailView):
+class TweetDetailView(LoginRequiredMixin, DetailView):
     model = Tweet
+
+class TweetProfileDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    model = Tweet
+
+    def get_success_url(self):
+        return reverse_lazy('tweets:user', kwargs={'username': self.request.user.username})
+
+    def test_func(self):
+        return self.get_object().author == self.request.user
+    
+class LikeHomeTweetView(LoginRequiredMixin, RedirectView):
+
+    def get_redirect_url(self, *args, **kwargs):
+        return reverse('tweets:home') + '#' + str(self.kwargs.get('pk'))
+
+    def get(self, request, *args, **kwargs):
+        tweet = Tweet.objects.get(id=self.kwargs.get('pk'))
+        if self.request.user.tweets_liked.filter(id = self.kwargs.get('pk')).exists():
+            tweet.liked_by.remove(self.request.user)
+        else:
+            tweet.liked_by.add(self.request.user)
+        return super().get(request, *args, **kwargs)
+
+class LikeDetailTweetView(LoginRequiredMixin, RedirectView):
+
+    def get_redirect_url(self, *args, **kwargs):
+        return reverse('tweets:detail', kwargs={'pk': self.kwargs.get('pk')})
+
+    def get(self, request, *args, **kwargs):
+        tweet = Tweet.objects.get(id=self.kwargs.get('pk'))
+        if self.request.user.tweets_liked.filter(id = self.kwargs.get('pk')).exists():
+            tweet.liked_by.remove(self.request.user)
+        else:
+            tweet.liked_by.add(self.request.user)
+        return super().get(request, *args, **kwargs)
+
+class LikeUserTweetsTweetView(LoginRequiredMixin, RedirectView):
+
+    def get_redirect_url(self, *args, **kwargs):
+        return reverse('tweets:user', kwargs={'username': self.kwargs.get('username')}) + '#' + str(self.kwargs.get('pk'))
+
+    def get(self, request, *args, **kwargs):
+        tweet = Tweet.objects.get(id=self.kwargs.get('pk'))
+        if self.request.user.tweets_liked.filter(id = self.kwargs.get('pk')).exists():
+            tweet.liked_by.remove(self.request.user)
+        else:
+            tweet.liked_by.add(self.request.user)
+        return super().get(request, *args, **kwargs)

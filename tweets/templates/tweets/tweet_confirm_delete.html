@@ -1,0 +1,9 @@
+{% extends '_base.html' %}
+
+{% block content %}
+<form method='post'>
+    {% csrf_token %}
+    <h3>Are you cure you want to delete this tweet?</h3>
+    <input type="submit" class='btn btn-danger' value='Confirm'>
+</form>
+{% endblock content %}

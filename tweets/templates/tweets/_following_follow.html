@@ -17,7 +17,7 @@
                         <p style='margin-top:-20px;'>@{{ follower.person.username }}</p></a>
                     </div>
                     <div class='col-4'>
-                        <strong><a href="{% url 'tweets:following_unfollow' username1=tweets_user.username username2=follower.person.username %}" class='edit-profile edit-profile-btn special-link '>Follow</a></strong>
+                        <strong><a href="{% url 'tweets:following_unfollow' username1=tweets_user.username username2=follower.person.username %}" class='edit-profile-follow edit-profile-btn special-link '>Follow</a></strong>
                     </div>
                 </div>
                 <div class='row'>

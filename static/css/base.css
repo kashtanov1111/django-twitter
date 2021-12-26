@@ -126,3 +126,44 @@
     padding: 20px;
     border: 1px solid black;
 }
+.delete-tweet{
+    color: red;
+}
+.margin-bottom-smaller{
+    margin-bottom: -20px;
+}
+.margin-bottom-top-smaller{
+    margin-bottom: -20px;
+    margin-top: -10px;
+}
+.like-bottom{
+    color:rgb(94, 94, 94);
+    text-decoration: none;
+}
+.like-bottom:hover{
+    color: red;
+}
+.liked-bottom{
+    color: red;
+    text-decoration: none;
+}
+.liked-bottom:hover {
+    color: red;
+}
+.edit-profile-follow{
+    border-radius: 20px;
+    text-align: center;
+    padding: 3px 10px;
+    background-color: black;
+    color: white;
+}
+.edit-profile-follow:hover {
+    background-color: rgb(36, 36, 36);
+    color: white;
+}
+.edit-profile-following{
+    border: 1px solid rgb(216, 216, 216);
+    border-radius: 20px;
+    text-align: center;
+    padding: 3px 10px;
+}

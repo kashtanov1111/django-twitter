@@ -1,12 +1,132 @@
 {% extends '_base.html' %}
 {% load tz %}
-
-
+{% load static %}
+{% load define_action %}
+                                <div class='col-1'>
+                                    <div class="dropdown">
+                                        <a class="" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                                            <i class="bi bi-three-dots"></i>
+                                        </a>
+                                      
+                                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                          <li><a class="delete-tweet dropdown-item" href="{% url 'tweets:delete' username=user.username pk=tweet.pk %}"><i class="bi bi-trash"></i> Delete</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
 {% block content %}
+
     <div class='row'>
         {% for tweet in tweet_list %}
+            
             {% if tweet.author == user %}
-                    {% include 'tweets/_tweet.html' %}
+            <div class="card">
+                <a class='special-link' href="{% url 'tweets:detail' pk=tweet.pk %}">
+                <div class="card-body">  
+                    <div id={{ tweet.id }} class='row'>
+                        
+                        <div class='col-1'>
+                            {% if tweet.author.avatar %}
+                                <object  type="owo/uwu">
+                                    <a href="{% url 'tweets:user' tweet.author.username %}"><img class='base-user-avatar' src="{{ tweet.author.avatar.url }}" alt=""></a>
+                                </object>
+                            {% else %}
+                                <object  type="owo/uwu">
+                                    <a href="{% url 'tweets:user' tweet.author.username %}"><img class='base-user-avatar' src="{% static 'images/nobody.jpg' %}" alt=""></a>
+                                </object>
+                            {% endif %}
+                        </div>
+                        
+                        <div class='col-11'>
+                            <div class='row'>
+                                <div class='col-11'>
+                                    <object  type="owo/uwu">
+                                    <p><a class='special-link' href="{% url 'tweets:user' tweet.author.username %}"><strong>{{ tweet.author.name }}</strong> <span class='username-in-tweet'>@{{ tweet.author.username }}</span> &#183;</a>   {{ tweet.since_published }}</p>
+                                    </object>
+                                </div>
+                                <div class='col-1'>
+                                    <div class="dropdown">
+                                        <object  type="owo/uwu">
+                                        <a class="" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                                            <i class="bi bi-three-dots"></i>
+                                        </a>
+                                      
+                                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                          <li><a class="delete-tweet dropdown-item" href="{% url 'tweets:delete' username=user.username pk=tweet.pk %}"><i class="bi bi-trash"></i> Delete</a></li>
+                                        </ul>
+                                    </object>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class='row'>
+                                <p class='text-in-tweet'>{{ tweet.text }}</p>
+                            </div>
+                            {% if tweet.image %}
+                                <img src="{{ tweet.image.url }}" class='tweet-image' alt="">
+                            {% endif %}
+                            
+                            <div class='row'>
+                                <div class='col-3'>
+                                    <object  type="owo/uwu">
+                                    <a href=""><span class='bi bi-chat'></span></a>
+                                    </object>
+                                </div>
+                                
+                                <div class='col-3'>
+                                    <div class="dropdown">
+                                        <object  type="owo/uwu">
+                                        <a class="" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                                            <span class='bi bi-arrow-repeat'></span>
+                                        </a>
+                                        
+                                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                          
+                                          <li><a class="dropdown-item" href="#"><i class="bi bi-arrow-repeat"></i> Retweet</a></li>
+                                            
+                                          
+                                          <li><a class="dropdown-item" href="#"><i class="bi bi-pencil"></i> Quote Tweet</a></li>
+                                          </object>
+                                        </ul>
+                                    </div>
+                                </div>
+                                
+                                <div class='col-3'>
+                                    {% if tweet.liked_by.count %}
+                                        {% if user in tweet.liked_by.all %}
+                                            <object  type="owo/uwu">
+                                            <a class='liked-bottom' href="{% url 'tweets:like_home' pk=tweet.pk%}"><span class='bi bi-heart-fill'></span> {{ tweet.liked_by.count }}</a>
+                                            </object>
+                                        {% else %}
+                                        <object  type="owo/uwu">
+                                            <a class='like-bottom' href="{% url 'tweets:like_home' pk=tweet.pk%}"><span class='bi bi-heart'></span> {{ tweet.liked_by.count }}</a>
+                                            </object>
+                                        {% endif %}
+                                    {% else %}
+                                    <object  type="owo/uwu">
+                                        <a class='like-bottom' href="{% url 'tweets:like_home' pk=tweet.pk%}"><span class='bi bi-heart'></span></a>
+                                        </object>
+                                    {% endif %}
+                                </div>
+                                
+                                <div class='col-3'>
+                                    <div class="dropdown">
+                                        <object  type="owo/uwu">
+                                        <a class="" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                                            <span class='bi bi-box-arrow-up'></span>
+                                        </a>
+                                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                          <li><a class="dropdown-item" href="#"><i class="bi bi-envelope"></i> Send via Direct Message</a></li>
+                                        </ul>
+                                    </object>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                </a>
+            </div>
+            
             {% else %}
                         
 
@@ -14,7 +134,101 @@
                         {% for following in user.following.all %}
 
                             {% if tweet.author == following.person %}
-                                {% include 'tweets/_tweet.html' %}
+                            <div class="card">
+                                <a class='special-link' href="{% url 'tweets:detail' pk=tweet.pk %}">
+                                <div class="card-body">  
+                                    <div id={{ tweet.id }} class='row'>
+                                        
+                                        <div class='col-1'>
+                                            {% if tweet.author.avatar %}
+                                                <object  type="owo/uwu">
+                                                    <a href="{% url 'tweets:user' tweet.author.username %}"><img class='base-user-avatar' src="{{ tweet.author.avatar.url }}" alt=""></a>
+                                                </object>
+                                            {% else %}
+                                                <object  type="owo/uwu">
+                                                    <a href="{% url 'tweets:user' tweet.author.username %}"><img class='base-user-avatar' src="{% static 'images/nobody.jpg' %}" alt=""></a>
+                                                </object>
+                                            {% endif %}
+                                        </div>
+                                        
+                                        <div class='col-11'>
+                                            <div class='row'>
+                                                <div class='col-12'>
+                                                    <object  type="owo/uwu">
+                                                    <p><a class='special-link' href="{% url 'tweets:user' tweet.author.username %}"><strong>{{ tweet.author.name }}</strong> <span class='username-in-tweet'>@{{ tweet.author.username }}</span> &#183;</a>   {{ tweet.since_published }}</p>
+                                                    </object>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class='row'>
+                                                <p class='text-in-tweet'>{{ tweet.text }}</p>
+                                            </div>
+                                            {% if tweet.image %}
+                                                <img src="{{ tweet.image.url }}" class='tweet-image' alt="">
+                                            {% endif %}
+                                            
+                                            <div class='row'>
+                                                <div class='col-3'>
+                                                    <object  type="owo/uwu">
+                                                    <a href=""><span class='bi bi-chat'></span></a>
+                                                    </object>
+                                                </div>
+                                                
+                                                <div class='col-3'>
+                                                    <div class="dropdown">
+                                                        <object  type="owo/uwu">
+                                                        <a class="" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                                                            <span class='bi bi-arrow-repeat'></span>
+                                                        </a>
+                                                        
+                                                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                                          
+                                                          <li><a class="dropdown-item" href="#"><i class="bi bi-arrow-repeat"></i> Retweet</a></li>
+                                                            
+                                                          
+                                                          <li><a class="dropdown-item" href="#"><i class="bi bi-pencil"></i> Quote Tweet</a></li>
+                                                          </object>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                                
+                                                <div class='col-3'>
+                                                    {% if tweet.liked_by.count %}
+                                                        {% if user in tweet.liked_by.all %}
+                                                            <object  type="owo/uwu">
+                                                            <a class='liked-bottom' href="{% url 'tweets:like_home' pk=tweet.pk%}"><span class='bi bi-heart-fill'></span> {{ tweet.liked_by.count }}</a>
+                                                            </object>
+                                                        {% else %}
+                                                        <object  type="owo/uwu">
+                                                            <a class='like-bottom' href="{% url 'tweets:like_home' pk=tweet.pk%}"><span class='bi bi-heart'></span> {{ tweet.liked_by.count }}</a>
+                                                            </object>
+                                                        {% endif %}
+                                                    {% else %}
+                                                    <object  type="owo/uwu">
+                                                        <a class='like-bottom' href="{% url 'tweets:like_home' pk=tweet.pk%}"><span class='bi bi-heart'></span></a>
+                                                        </object>
+                                                    {% endif %}
+                                                </div>
+                                                
+                                                <div class='col-3'>
+                                                    <div class="dropdown">
+                                                        <object  type="owo/uwu">
+                                                        <a class="" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                                                            <span class='bi bi-box-arrow-up'></span>
+                                                        </a>
+                                                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                                          <li><a class="dropdown-item" href="#"><i class="bi bi-envelope"></i> Send via Direct Message</a></li>
+                                                        </ul>
+                                                    </object>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                </a>
+                            </div>
+                            
                             {% endif %}
                         {% endfor %}
 
@@ -22,4 +236,8 @@
             {% endif %}      
         {% endfor %}
     </div>
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="{% static 'js/home.js' %}"></script>
 {% endblock content %}

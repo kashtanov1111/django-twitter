@@ -1,5 +1,95 @@
 {% extends '_base.html' %}
-
+{% load static %}
 {% block content %}
-    {% include 'tweets/_tweet.html' %}
+<div class="card">
+    <div class="card-body">  
+        <div class='row'>
+            <div class='col-1'>
+                {% if tweet.author.avatar %}
+                    <a href="{% url 'tweets:user' tweet.author.username %}"><img class='base-user-avatar' src="{{ tweet.author.avatar.url }}" alt=""></a>
+                {% else %}
+                    <a href="{% url 'tweets:user' tweet.author.username %}"><img class='base-user-avatar' src="{% static 'images/nobody.jpg' %}" alt=""></a>
+                {% endif %}
+            </div>
+            <div class='col-11'>
+                <div class='row'>
+                    <div class='col-11'>
+                        <p><a class='special-link' href="{% url 'tweets:user' tweet.author.username %}"><strong>{{ tweet.author.name }}</strong> <span class='username-in-tweet'>@{{ tweet.author.username }}</span> &#183;</a>   {{ tweet.since_published }}</p>
+                    </div>
+                    {% if tweet.author == user %}
+                    <div class='col-1'>
+                        <div class="dropdown">
+                            <a class="" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="bi bi-three-dots"></i>
+                            </a>
+                          
+                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                              <li><a class="delete-tweet dropdown-item" href="{% url 'tweets:delete' username=user.username pk=tweet.pk %}"><i class="bi bi-trash"></i> Delete</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+                <div class='row'>
+                    <p class='text-in-tweet'>{{ tweet.text }}</p>
+                </div>
+                {% if tweet.image %}
+                    <img src="{{ tweet.image.url }}" class='tweet-image' alt="">
+                {% endif %}
+                <div class='margin-bottom-smaller row'>
+                    <p>{{ tweet.published}} </p>
+                </div>
+                <hr>
+                <div class='margin-bottom-top-smaller row'>
+                    <div class='col-3'>
+                        <p> Retweets</p>
+                    </div>
+                    <div class='col-3'>
+                        <p> Quote Tweets</p>
+                    </div>
+                    {% if tweet.liked_by.count %}
+                        <div class='col-3'>
+                            <p><strong>{{ tweet.liked_by.count }}</strong> Likes</p>
+                        </div>       
+                    {% endif %}
+                </div>
+                <hr>
+                <div class='row'>
+                    <div class='col-3'>
+                        <a href=""><span class='bi bi-chat'></span></a>
+                    </div>
+                    <div class='col-3'>
+                        <div class="dropdown">
+                            <a class="" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                                <span class='bi bi-arrow-repeat'></span>
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                              <li><a class="dropdown-item" href="#"><i class="bi bi-arrow-repeat"></i> Retweet</a></li>
+                              <li><a class="dropdown-item" href="#"><i class="bi bi-pencil"></i> Quote Tweet</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class='col-3'>
+                        {% if user in tweet.liked_by.all %}
+                            <a class='liked-bottom' href="{% url 'tweets:like_detail' pk=tweet.pk%}"><span class='bi bi-heart-fill'></span></a>
+                        {% else %}
+                            <a class='like-bottom' href="{% url 'tweets:like_detail' pk=tweet.pk%}"><span class='bi bi-heart'></span></a>
+                        {% endif %}
+                    </div>
+                    <div class='col-3'>
+                        <div class="dropdown">
+                            <a class="" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                                <span class='bi bi-box-arrow-up'></span>
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                              <li><a class="dropdown-item" href="#"><i class="bi bi-envelope"></i> Send via Direct Message</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock content %}
