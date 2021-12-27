@@ -73,21 +73,39 @@
                                 </div>
                                 
                                 <div class='col-3'>
+                                    {% if user in tweet.retweeted_by.all %}
                                     <div class="dropdown">
                                         <object  type="owo/uwu">
-                                        <a class="" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
-                                            <span class='bi bi-arrow-repeat'></span>
+                                        <a class="retweet-active" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                                            <span class='bi bi-arrow-repeat'></span>  
+                                                {{ tweet.retweeted_by.count }}
                                         </a>
                                         
                                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                                           
-                                          <li><a class="dropdown-item" href="#"><i class="bi bi-arrow-repeat"></i> Retweet</a></li>
-                                            
-                                          
+                                            <li><a class="dropdown-item" href="{% url 'tweets:retweet_home' pk=tweet.pk %}"><i class="bi bi-arrow-repeat"></i>Undo Retweet</a></li>
                                           <li><a class="dropdown-item" href="#"><i class="bi bi-pencil"></i> Quote Tweet</a></li>
                                           </object>
                                         </ul>
                                     </div>
+                                    {% else %}
+                                    <div class="dropdown">
+                                        <object  type="owo/uwu">
+                                        <a class="retweet-inactive" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                                            <span class='bi bi-arrow-repeat'></span>
+                                                {% if tweet.retweeted_by.all %}
+                                                    {{ tweet.retweeted_by.count }}
+                                                {% endif %}  
+                                        </a>
+                                        
+                                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                          
+                                            <li><a class="dropdown-item" href="{% url 'tweets:retweet_home' pk=tweet.pk %}"><i class="bi bi-arrow-repeat"></i>Retweet</a></li>
+                                          <li><a class="dropdown-item" href="#"><i class="bi bi-pencil"></i> Quote Tweet</a></li>
+                                          </object>
+                                        </ul>
+                                    </div>                                    
+                                    {% endif %}
                                 </div>
                                 
                                 <div class='col-3'>
@@ -175,21 +193,39 @@
                                                 </div>
                                                 
                                                 <div class='col-3'>
+                                                    {% if user in tweet.retweeted_by.all %}
                                                     <div class="dropdown">
                                                         <object  type="owo/uwu">
-                                                        <a class="" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
-                                                            <span class='bi bi-arrow-repeat'></span>
+                                                        <a class="retweet-active" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                                                            <span class='bi bi-arrow-repeat'></span>  
+                                                                {{ tweet.retweeted_by.count }}
                                                         </a>
                                                         
                                                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                                                          
-                                                          <li><a class="dropdown-item" href="#"><i class="bi bi-arrow-repeat"></i> Retweet</a></li>
-                                                            
-                                                          
+                                                        
+                                                            <li><a class="dropdown-item" href="{% url 'tweets:retweet_home' pk=tweet.pk %}"><i class="bi bi-arrow-repeat"></i>Undo Retweet</a></li>
                                                           <li><a class="dropdown-item" href="#"><i class="bi bi-pencil"></i> Quote Tweet</a></li>
                                                           </object>
                                                         </ul>
                                                     </div>
+                                                    {% else %}
+                                                    <div class="dropdown">
+                                                        <object  type="owo/uwu">
+                                                        <a class="retweet-inactive" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                                                            <span class='bi bi-arrow-repeat'></span>
+                                                                {% if tweet.retweeted_by.all %}
+                                                                    {{ tweet.retweeted_by.count }}
+                                                                {% endif %}  
+                                                        </a>
+                                                        
+                                                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                                        
+                                                            <li><a class="dropdown-item" href="{% url 'tweets:retweet_home' pk=tweet.pk %}"><i class="bi bi-arrow-repeat"></i>Retweet</a></li>
+                                                          <li><a class="dropdown-item" href="#"><i class="bi bi-pencil"></i> Quote Tweet</a></li>
+                                                          </object>
+                                                        </ul>
+                                                    </div>                                    
+                                                    {% endif %}
                                                 </div>
                                                 
                                                 <div class='col-3'>

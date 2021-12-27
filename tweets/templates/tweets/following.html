@@ -26,6 +26,8 @@
                             {% if forloop.counter == user.following.count and flag == False %}
                                 {% include 'tweets/_following_follow.html' %}
                             {% endif %}
+                    {% empty %}
+                        {% include 'tweets/_following_follow.html' %}
                     {% endfor %}
                 {% else %}
                     <div class="card">

@@ -149,6 +149,20 @@ class FollowerUser(LoginRequiredMixin, RedirectView):
             Follow.objects.create(person=bloger, follower_of_person=self.request.user)
         return super().get(request, *args, **kwargs)
 
+class FollowLikedByUser(LoginRequiredMixin, RedirectView):
+    
+    def get_redirect_url(self, *args, **kwargs):
+        return reverse('tweets:liked_by', kwargs={'pk': self.kwargs.get('pk')})
+
+    def get(self, request, *args, **kwargs):
+        bloger = get_user_model().objects.get(username=self.kwargs.get('username2'))
+        try:
+            Follow.objects.get(person=bloger, follower_of_person=self.request.user).delete()
+        except:
+            Follow.objects.create(person=bloger, follower_of_person=self.request.user)
+        return super().get(request, *args, **kwargs)
+
+
 class TweetDetailView(LoginRequiredMixin, DetailView):
     model = Tweet
 
@@ -199,3 +213,22 @@ class LikeUserTweetsTweetView(LoginRequiredMixin, RedirectView):
         else:
             tweet.liked_by.add(self.request.user)
         return super().get(request, *args, **kwargs)
+
+class RetweetHomeView(LoginRequiredMixin, RedirectView):
+
+    def get_redirect_url(self, *args, **kwargs):
+        return reverse('tweets:home') + '#' + str(self.kwargs.get('pk'))
+
+    def get(self, request, *args, **kwargs):
+        tweet = Tweet.objects.get(id=self.kwargs.get('pk'))
+        if self.request.user.tweets_retweeted.filter(id = self.kwargs.get('pk')).exists():
+            tweet.retweeted_by.remove(self.request.user)
+        else:
+            tweet.retweeted_by.add(self.request.user)
+        return super().get(request, *args, **kwargs)
+
+@login_required
+def liked_by_tweet_view(request, pk):
+    tweet = Tweet.objects.get(pk=pk)
+    liked_by = tweet.liked_by.all()
+    return render(request, 'tweets/liked_by.html', {'tweet': tweet, 'liked_by': liked_by})

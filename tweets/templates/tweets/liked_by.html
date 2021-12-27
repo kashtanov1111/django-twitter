@@ -1,0 +1,177 @@
+{% extends '_base.html' %}
+{% load static %}
+{% load define_action %}
+
+{% block content %}
+    <h1>Liked by</h1>
+    {% for person in liked_by %}
+        {% if user == person %}
+        <div class="card">
+            <a href="{% url 'tweets:user' person.username %}" style='color:black; text-decoration:none;'>
+            <div class="card-body">
+                <div class='row'>
+                    <div class='col-1'>
+                        {% if person.avatar %}
+                        
+                            <img class='base-user-avatar' src="{{ person.avatar.url }}" alt="">
+                        
+                        {% else %}
+                        
+                            <img class='base-user-avatar' src="{% static 'images/nobody.jpg' %}" alt="">
+                        
+                        {% endif %}
+                    </div>
+                    <div class='col-11'>
+                        <div class='row'>
+                            <div class='col-8'>
+                                
+                                <p class='name-user-liked'><strong>{{ person.name }}</strong></p>
+                                <p style='margin-top:-20px;'>@{{ person.username }}</p>
+                                
+                            </div>
+                        </div>
+                        <div class='row'>
+                            <div class='col-12'>
+                                <p style='margin-top:-10px;'>{{ person.bio }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </a>
+        </div>
+        {% else %}
+            {% update_variable False as flag %}
+            {% for i in person.followers.all %}
+                {% if user == i.follower_of_person %}
+                    <!--following-->
+                    <div class="card">
+                        <a href="{% url 'tweets:user' person.username %}" style='color:black; text-decoration:none;'>
+                        <div class="card-body">
+                            <div class='row'>
+                                <div class='col-1'>
+                                    {% if person.avatar %}
+                                    
+                                        <img class='base-user-avatar' src="{{ person.avatar.url }}" alt="">
+                                    
+                                    {% else %}
+                                    
+                                        <img class='base-user-avatar' src="{% static 'images/nobody.jpg' %}" alt="">
+                                    
+                                    {% endif %}
+                                </div>
+                                <div class='col-11'>
+                                    <div class='row'>
+                                        <div class='col-8'>
+                                            
+                                            <p class='name-user-liked'><strong>{{ person.name }}</strong></p>
+                                            <p style='margin-top:-20px;'>@{{ person.username }}</p>
+                                            
+                                        </div>
+                                        <div class='col-4'>
+                                            <object  type="owo/uwu">
+                                            <strong><a href="{% url 'tweets:liked_by_unfollow' pk=tweet.pk username1=user.username username2=person.username %}" class='edit-profile-following edit-profile-btn special-link '>Following</a></strong>
+                                            </object>
+                                        </div>
+                                    </div>
+                                    <div class='row'>
+                                        <div class='col-12'>
+                                            <p style='margin-top:-10px;'>{{ person.bio }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        </a>
+                    </div>
+                    {% update_variable True as flag %}
+                {% endif %}
+                {% if forloop.counter == person.followers.count and flag == False %}
+                    <!--follow-->
+                    <div class="card">
+                        <a href="{% url 'tweets:user' person.username %}" style='color:black; text-decoration:none;'>
+                        <div class="card-body">
+                            <div class='row'>
+                                <div class='col-1'>
+                                    {% if person.avatar %}
+                                    
+                                        <img class='base-user-avatar' src="{{ person.avatar.url }}" alt="">
+                                    
+                                    {% else %}
+                                    
+                                        <img class='base-user-avatar' src="{% static 'images/nobody.jpg' %}" alt="">
+                                    
+                                    {% endif %}
+                                </div>
+                                <div class='col-11'>
+                                    <div class='row'>
+                                        <div class='col-8'>
+                                            
+                                            <p class='name-user-liked'><strong>{{ person.name }}</strong></p>
+                                            <p style='margin-top:-20px;'>@{{ person.username }}</p>
+                                            
+                                        </div>
+                                        <div class='col-4'>
+                                            <object  type="owo/uwu">
+                                            <strong><a href="{% url 'tweets:liked_by_unfollow' pk=tweet.pk username1=user.username username2=person.username %}" class='edit-profile-follow edit-profile-btn special-link '>Follow</a></strong>
+                                            </object>
+                                        </div>
+                                    </div>
+                                    <div class='row'>
+                                        <div class='col-12'>
+                                            <p style='margin-top:-10px;'>{{ person.bio }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        </a>
+                    </div>
+                {% endif %}
+            {% empty %}
+                    <!--follow-->
+                    <div class="card">
+                        <a href="{% url 'tweets:user' person.username %}" style='color:black; text-decoration:none;'>
+                        <div class="card-body">
+                            <div class='row'>
+                                <div class='col-1'>
+                                    {% if person.avatar %}
+                                    
+                                        <img class='base-user-avatar' src="{{ person.avatar.url }}" alt="">
+                                    
+                                    {% else %}
+                                    
+                                        <img class='base-user-avatar' src="{% static 'images/nobody.jpg' %}" alt="">
+                                    
+                                    {% endif %}
+                                </div>
+                                <div class='col-11'>
+                                    <div class='row'>
+                                        <div class='col-8'>
+                                            
+                                            <p class='name-user-liked'><strong>{{ person.name }}</strong></p>
+                                            <p style='margin-top:-20px;'>@{{ person.username }}</p>
+                                            
+                                        </div>
+                                        <div class='col-4'>
+                                            <object  type="owo/uwu">
+                                            <strong><a href="{% url 'tweets:liked_by_unfollow' pk=tweet.pk username1=user.username username2=person.username %}" class='edit-profile-follow edit-profile-btn special-link '>Follow</a></strong>
+                                            </object>
+                                        </div>
+                                    </div>
+                                    <div class='row'>
+                                        <div class='col-12'>
+                                            <p style='margin-top:-10px;'>{{ person.bio }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        </a>
+                    </div>
+            {% endfor %}
+        {% endif %}
+    {% endfor %}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="{% static 'js/usertweets.js' %}"></script>
+{% endblock content %}

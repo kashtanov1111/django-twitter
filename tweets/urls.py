@@ -9,8 +9,10 @@ urlpatterns = [
     path('edit-profile/', views.userprofile, name='edit'),
     path('new-tweet/', views.CreateTweetView.as_view(), name='new_tweet'),
     path('<uuid:pk>/',views.TweetDetailView.as_view(), name='detail'),
+    path('<uuid:pk>/liked_by',views.liked_by_tweet_view, name='liked_by'),
     path('<uuid:pk>/like_detail/', views.LikeDetailTweetView.as_view(), name='like_detail'),
     path('<uuid:pk>/like_home/', views.LikeHomeTweetView.as_view(), name='like_home'),
+    path('<uuid:pk>/retweet_home/', views.RetweetHomeView.as_view(), name='retweet_home'),
     path('<str:username>/', views.UserListView.as_view(), name='user'),
     path('<str:username>/followers/', views.Followers.as_view(), name='followers'),
     path('<str:username>/following/', views.Following.as_view(), name='following'),
@@ -19,5 +21,6 @@ urlpatterns = [
     path('follow/<str:username>/', views.FollowUser.as_view(), name='follow'),
     path('following/<str:username1>/<str:username2>/', views.FollowingUser.as_view(), name='following_unfollow'),
     path('follower/<str:username1>/<str:username2>/', views.FollowerUser.as_view(), name='follower_unfollow'),
+    path('followlike/<str:username1>/<str:username2>/<uuid:pk>/', views.FollowLikedByUser.as_view(), name='liked_by_unfollow'),
     
 ]

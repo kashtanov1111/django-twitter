@@ -49,7 +49,7 @@
                     </div>
                     {% if tweet.liked_by.count %}
                         <div class='col-3'>
-                            <p><strong>{{ tweet.liked_by.count }}</strong> Likes</p>
+                            <a class='element-in-detail' href="{% url 'tweets:liked_by' pk=tweet.pk %}"><p><strong>{{ tweet.liked_by.count }}</strong> Likes</p></a>
                         </div>       
                     {% endif %}
                 </div>
